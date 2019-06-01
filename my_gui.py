@@ -1,10 +1,15 @@
+import time
 import webbrowser
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import PIL.Image
 import PIL.ImageTk
-import cv2
+import video_capture as vid
+import hand as h
+
+start = False
+base = []
 
 
 class HandyBrowser(Tk):
@@ -69,13 +74,13 @@ class HandyBrowser(Tk):
                                   variable=self.view,
                                   command=lambda: self.show_frame(BasePage))
 
-        menu_view.add_radiobutton(label='Camera view', value="CameraPage",
-                                  variable=self.view,
-                                  command=lambda: self.show_frame(CameraPage))
+        # menu_view.add_radiobutton(label='Camera view', value="CameraPage",
+        #                           variable=self.view,
+        #                           command=lambda: self.show_frame(CameraPage))
 
         menu_help.add_command(label='Manual',
                               command=lambda: webbrowser.open_new_tab(
-                                  "https://github.com"))
+                                  "https://github.com/mikiisz/Handy-Browser"))
 
         menu_help.add_separator()
 
@@ -85,30 +90,6 @@ class HandyBrowser(Tk):
     def show_about():
         messagebox.showinfo("About", "Handy Browser 2019, version 1.0.0\n"
                                      "Dominik Mondzik and Michał Szkarłat")
-
-
-class MyVideoCapture:
-
-    def __init__(self, video_source):
-        # Open the video source
-        self.vid = cv2.VideoCapture(video_source)
-        if not self.vid.isOpened():
-            raise ValueError("Unable to open video source", video_source)
-
-    def get_frame(self):
-        if self.vid.isOpened():
-            ret, frame = self.vid.read()
-            if ret:
-                return ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            else:
-                return ret, None
-        else:
-            return None, None
-
-    # Release the video source when the object is destroyed
-    def __del__(self):
-        if self.vid.isOpened():
-            self.vid.release()
 
 
 class Browser:
@@ -123,10 +104,23 @@ class Pages:
     def __init__(self):
         self.state = []
 
-    def set(self, set1, set2):
-        self.state.append(set1)
-        self.state.append(set2)
-        print(self.state)
+    def set(self, set1, set2, cam):
+        global start
+        if not start:
+            if browser.state != "Not found":
+                self.state.append(set1)
+                self.state.append(set2)
+                start = True
+                global base
+                base = vid.start(self.state, browser.state)
+                # time.sleep(1)
+                cam.__del__()
+                global app
+                app.destroy()
+                h.init(base)
+            else:
+                messagebox.showinfo("Error",
+                                    "Before staring choose browser")
 
 
 browser = Browser()
@@ -134,6 +128,8 @@ pages = Pages()
 
 
 class BasePage(Frame):
+    # vid = vid.MyVideoCapture(0)
+
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
 
@@ -193,12 +189,14 @@ class BasePage(Frame):
         # browser_status = StringVar(value=browser.state)
         # browser_label = ttk.Label(left_frame, text=browser_status.get())
         # browser_label.grid(row=4, column=0, columnspan=2, pady=10, sticky=E)
+        self.vid = vid.MyVideoCapture(0)
 
         label = ttk.Label(left_frame, text="For more information \n"
                                            "check manual: \n"
                                            "Help -> Manual", padding=(20, 10))
         button = ttk.Button(left_frame, text="Start",
-                            command=lambda: pages.set(e1.get(), e2.get()))
+                            command=lambda: pages.set(e1.get(), e2.get(),
+                                                      self.vid))
         label.grid(row=7, column=0, sticky=W)
         button.grid(row=7, column=1, sticky=E)
 
@@ -212,73 +210,102 @@ class BasePage(Frame):
 
         # open video source (by default this will try to open the computer webcam)
         # self.vid = MyVideoCapture("big_buck_bunny_480p_stereo.avi")
-        self.vid = MyVideoCapture(0)
-        self.camera_canvas = Canvas(right_frame, width=260, height=200)
-        self.camera_canvas.bind("<Button-1>",
-                                lambda e: controller.show_frame(CameraPage))
-        self.camera_canvas.grid(row=0, column=0, pady=20)
+
+        self.cam1 = Canvas(right_frame, width=320, height=240)
+        self.cam1.grid(row=0, column=0, pady=20)
+
+        self.cam2 = Canvas(right_frame, width=320, height=240)
+        self.cam2.grid(row=0, column=1, pady=20)
 
         # names sX to change
         scale_frame = ttk.Frame(right_frame)
-        self.s1_variable = DoubleVar(value=1.0)
-        self.s2_variable = DoubleVar(value=1.0)
-        self.s3_variable = DoubleVar(value=50.0)
+        self.s1_variable = DoubleVar(value=100000)
+        self.s2_variable = DoubleVar(value=5000)
+        self.s3_variable = DoubleVar(value=150)
+        self.s4_variable = DoubleVar(value=150)
+
+        ttk.Label(scale_frame, text="Size of pixel detection",
+                  padding=(20, 10)).grid(
+            row=0, column=0, sticky=W)
+        ttk.Label(scale_frame, text="Number of motion pixels",
+                  padding=(20, 10)).grid(
+            row=1, column=0, sticky=W)
+        ttk.Label(scale_frame, text="x offset",
+                  padding=(20, 10)).grid(
+            row=2, column=0, sticky=W)
+        ttk.Label(scale_frame, text="y offset",
+                  padding=(20, 10)).grid(
+            row=3, column=0, sticky=W)
+
         s1 = ttk.Scale(scale_frame, orient=HORIZONTAL,
                        variable=self.s1_variable,
-                       length=150, from_=0.1, to=5.0)
+                       length=200, from_=0, to=500000)
         s2 = ttk.Scale(scale_frame, orient=HORIZONTAL,
                        variable=self.s2_variable,
-                       length=150, from_=0.1, to=5.0)
+                       length=200, from_=0, to=10000)
         s3 = ttk.Scale(scale_frame, orient=HORIZONTAL,
                        variable=self.s3_variable,
-                       length=150, from_=1.0, to=100.0)
+                       length=200, from_=0, to=500)
+        s4 = ttk.Scale(scale_frame, orient=HORIZONTAL,
+                       variable=self.s4_variable,
+                       length=200, from_=0, to=500)
         scale_frame.grid(row=1, column=0, pady=20)
-        s1.grid(row=0, column=0, pady=2)
-        s2.grid(row=1, column=0, pady=2)
-        s3.grid(row=2, column=0, pady=2)
+        s1.grid(row=0, column=1, pady=2)
+        s2.grid(row=1, column=1, pady=2)
+        s3.grid(row=2, column=1, pady=2)
+        s4.grid(row=3, column=1, pady=2)
 
         self.delay = 15
+
         self.update()
 
     def update(self):
         # Get a frame from the video source
-        ret, frame = self.vid.get_frame()
+        ret, fg_mask, mask = self.vid.get_frame(int(self.s1_variable.get()),
+                                                int(self.s2_variable.get()),
+                                                int(self.s3_variable.get()),
+                                                int(self.s4_variable.get()))
 
         if ret:
-            self.photo = PIL.ImageTk.PhotoImage(
-                image=PIL.Image.fromarray(frame).resize((int(
-                    self.s1_variable.get() * 260), int(
-                    self.s2_variable.get() * 200))))
-            self.camera_canvas.create_image(0, 0, image=self.photo, anchor=NW)
+            self.photo1 = PIL.ImageTk.PhotoImage(
+                image=PIL.Image.fromarray(fg_mask).resize((320, 240)))
+            self.cam1.create_image(0, 0, image=self.photo1, anchor=NW)
 
-        self.camera_canvas.after(self.delay, self.update)
+            self.photo2 = PIL.ImageTk.PhotoImage(
+                image=PIL.Image.fromarray(mask))
+            self.cam2.create_image(0, 0, image=self.photo2, anchor=NW)
+
+        self.cam1.after(self.delay, self.update)
 
 
 class CameraPage(Frame):
-
+    # vid = BasePage.vid
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
-        self.vid = MyVideoCapture("big_buck_bunny_480p_stereo.avi")
+        # self.vid = vid.MyVideoCapture("big_buck_bunny_480p_stereo.avi")
         # self.vid = MyVideoCapture(0)
         self.camera_canvas = Canvas(self, width=640, height=480)
         self.camera_canvas.grid(row=0, column=0)
         self.camera_canvas.bind("<Button-1>",
                                 lambda e: controller.show_frame(BasePage))
 
-        self.delay = 15
-        self.update()
 
-    def update(self):
-        # Get a frame from the video source
-        ret, frame = self.vid.get_frame()
-
-        if ret:
-            self.photo = PIL.ImageTk.PhotoImage(
-                image=PIL.Image.fromarray(frame).resize((640, 480)))
-            self.camera_canvas.create_image(0, 0, image=self.photo, anchor=NW)
-
-        self.camera_canvas.after(self.delay, self.update)
+#
+#         self.delay = 15
+#         self.update()
+#
+#     def update(self):
+#         # Get a frame from the video source
+#         ret, frame, s = self.vid.get_frame()
+#
+#         if ret:
+#             self.photo = PIL.ImageTk.PhotoImage(
+#                 image=PIL.Image.fromarray(frame).resize((640, 480)))
+#             self.camera_canvas.create_image(0, 0, image=self.photo, anchor=NW)
+#
+#         self.camera_canvas.after(self.delay, self.update)
 
 
 app = HandyBrowser()
 app.mainloop()
+
