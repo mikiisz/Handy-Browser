@@ -2,7 +2,7 @@
 * [General info](#general-info)
 * [Getting started](#getting-started)
 * [Manual](#manual)
-* [Contact] (#contact)
+* [Contact](#contact)
 
 ## General info
 Handy Browser is a small tool that help users to operate Internet Browsers with thairs hands.
