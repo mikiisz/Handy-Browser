@@ -1,10 +1,12 @@
 import cv2
 import numpy as np
 import math
+import hand_s as h_s
 from selenium import webdriver
 
 
 def init(base):
+    static = False
     print(base)
     data = []
     sound = []
@@ -12,6 +14,7 @@ def init(base):
     x_prev = 0
     y_prev = 0
     pause = True
+    img_counter = 0
 
     max_points = base[2]
     sensitivity = base[3]
@@ -124,6 +127,12 @@ def init(base):
         fg_mask = back_sub.apply(img)
         mask = img.copy()
 
+        if static:
+            static, img_counter = h_s.static_camera(img_counter, fg_mask, mask,
+                                                    sensitivity,
+                                                    max_points)
+            continue
+
         contours, tmp = cv2.findContours(fg_mask, cv2.RETR_LIST,
                                          cv2.CHAIN_APPROX_SIMPLE)
 
@@ -136,14 +145,13 @@ def init(base):
             i += 1
             if sensitivity < cv2.contourArea(cnt) and max_points > i:
                 (x, y, w, h) = cv2.boundingRect(cnt)
-                cv2.rectangle(mask, (x, y), (x + w, y + h), (255, 255, 0), -1)
+                cv2.rectangle(mask, (x, y), (x + w, y + h), (255, 255, 0), 0)
                 cv2.drawContours(fg_mask, [cnt], 0, (255, 255, 255), -1)
                 x_average += x + w / 2
                 y_average += y + h / 2
                 # print(x_average, y_average)
                 cv2.circle(mask, (int(x_average), int(y_average)), 5,
-                           (0, 255, 0),
-                           -1)
+                           (0, 255, 0), -1)
                 size += 1
 
         if w == 640 and h == 480:
@@ -222,7 +230,7 @@ def init(base):
                 start = tuple(cnt[s][0])
                 end = tuple(cnt[e][0])
                 far = tuple(cnt[f][0])
-                #
+
                 a = math.sqrt(
                     (end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
                 b = math.sqrt(
@@ -275,19 +283,21 @@ def init(base):
             sound = []
             fingers = []
 
-        cv2.imshow("fgMask", fg_mask)
+        # cv2.imshow("fgMask", fg_mask)
         cv2.imshow("mask", mask)
         # cv2.imshow('crop_img', crop_img)
-        cv2.imshow("blurred", blurred)
-        cv2.imshow("thresh", thresh)
-        if contours:
-            cv2.imshow("drawing", drawing)
+        # cv2.imshow("blurred", blurred)
+        # cv2.imshow("thresh", thresh)
+        # if contours:
+        # cv2.imshow("drawing", drawing)
 
         keypress = cv2.waitKey(1) & 0xFF
         if keypress == ord("q"):
             if start:
                 driver.close()
             break
+        if keypress == ord("s"):
+            static = True
         if keypress == ord("r"):
             back_sub = cv2.createBackgroundSubtractorMOG2(history=500,
                                                           varThreshold=16,
