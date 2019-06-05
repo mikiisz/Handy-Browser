@@ -33,6 +33,7 @@ Make sure to follow the instructions correctly
 The program can work in 2 modes: static and dynamic. <br>
 To change between the modes click <b>s</b> <br>
 To reset the background sample click <b>r</b> <br>
+To quit tha application click <b>q</b> 
 
 ### Navigation
 
