@@ -8,10 +8,10 @@ Version 1.0.1
 * [Contact](#contact)
 
 ## General info
-Handy Browser is a small tool that help users to operate Internet Browsers with thairs hands.
-Progeram was designed by Michał Szkarłat and Dominik Mondzik.
-The orgin of this project was to complete and pass the python course.
-Feel free to use and edit the code.
+Handy Browser is a small tool that help users to operate Internet Browsers with thairs hands.<br>
+Progeram was designed by Michał Szkarłat and Dominik Mondzik.<br>
+The orgin of this project was to complete and pass the python course.<br>
+Feel free to use and edit the code.<br>
 The way you can reach us is described in the 'contact' section.
 	
 ## Getting started
@@ -24,14 +24,14 @@ Project is created with python3, using:
 * tkinter==8.6
 * webbrowser>=1.0
 
-After installing the required dependecies you have to make sure to install geckodriver.
-This issue is well descirebed here: https://python-forum.io/Thread-Getting-error-geckodriver-executable-needs-to-be-in-PATH
+After installing the required dependecies you have to make sure to install geckodriver.<br>
+This issue is well descirebed here: https://python-forum.io/Thread-Getting-error-geckodriver-executable-needs-to-be-in-PATH<br>
 Make sure to follow the instructions correctly
 	
 ## Manual
 The program can work in 2 modes: static and dynamic. <br>
 To change between the modes click <b>s</b> <br>
-To reste the background sample click <b>r</b> <br>
+To reset the background sample click <b>r</b> <br>
 
 ### Navigation
 
