@@ -29,7 +29,11 @@ This issue is well descirebed here: https://python-forum.io/Thread-Getting-error
 Make sure to follow the instructions correctly
 	
 ## Manual
-To run this project, install it locally using npm:
+The program can work in 2 modes: static and dynamic. <br>
+To change between the modes click <b>s</b> <br>
+To reste the background sample click <b>r</b> <br>
+
+### Navigation
 
 ```
 $ cd ../lorem
@@ -39,5 +43,5 @@ $ npm start
 
 ## Contact
 We prefer to contact by email:
-* Michał Szkarłat - mikiisz497@gmail.coom
+* Michał Szkarłat - mikiisz497@gmail.com
 * Dominik Mondzik - mondzik.d@gmail.com
