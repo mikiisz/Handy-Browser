@@ -12,6 +12,7 @@ Feel free to use and edit the code.
 The way you can reach us is described in the 'contact' section.
 	
 ## Getting started
+### Project is linux friendly
 Project is created with python3, using:
 * Pillow==5.1.0
 * opencv-python==4.0.0.21
