@@ -1,3 +1,6 @@
+# Handy-Browser
+Version 1.0.1
+
 ## Table of contents
 * [General info](#general-info)
 * [Getting started](#getting-started)
