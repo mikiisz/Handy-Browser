@@ -88,8 +88,8 @@ class HandyBrowser(Tk):
 
     @staticmethod
     def show_about():
-        messagebox.showinfo("About", "Handy Browser 2019, version 1.0.0\n"
-                                     "Dominik Mondzik and Michał Szkarłat")
+        messagebox.showinfo("About", "Handy Browser 2019\n"
+                                     "Dominik Mondzik\nMichał Szkarłat")
 
 
 class Browser:
@@ -104,12 +104,13 @@ class Pages:
     def __init__(self):
         self.state = []
 
-    def set(self, set1, set2, cam):
+    def set(self, set1, set2, set3, cam):
         global start
         if not start:
             if browser.state != "Not found":
                 self.state.append(set1)
                 self.state.append(set2)
+                self.state.append(set3)
                 start = True
                 global base
                 base = vid.start(self.state, browser.state)
@@ -162,23 +163,27 @@ class BasePage(Frame):
         left_separator.grid(row=2, column=0, columnspan=2, sticky=(E, W),
                             pady=20)
 
-        webpage = StringVar(value="Identify fingers with webpages")
-        webpage_label = ttk.Label(left_frame, text=webpage.get())
-        webpage_label.grid(row=3, column=0, columnspan=2, pady=10, sticky=N)
+        web_page = StringVar(value="Identify fingers with webpages")
+        web_page_label = ttk.Label(left_frame, text=web_page.get())
+        web_page_label.grid(row=4, column=0, columnspan=2, pady=10, sticky=N)
 
-        ttk.Label(left_frame, text="Two Fingers, right:").grid(row=4, sticky=W)
-        ttk.Label(left_frame, text="Two Fingers, left:").grid(row=5, sticky=W)
+        ttk.Label(left_frame, text="Homepage:").grid(row=3, sticky=W)
+        ttk.Label(left_frame, text="Two Fingers, right:").grid(row=5, sticky=W)
+        ttk.Label(left_frame, text="Two Fingers, left:").grid(row=6, sticky=W)
 
         e1 = ttk.Entry(left_frame)
         e2 = ttk.Entry(left_frame)
-        e1.insert(10, "youtube.com")
-        e2.insert(10, "gmail.com")
+        e3 = ttk.Entry(left_frame)
+        e1.insert(10, "http://google.com")
+        e2.insert(10, "http://youtube.com")
+        e3.insert(10, "http://gmail.com")
 
-        e1.grid(row=4, column=1)
+        e1.grid(row=3, column=1)
         e2.grid(row=5, column=1)
+        e3.grid(row=6, column=1)
 
         left_separator = ttk.Separator(left_frame, orient=HORIZONTAL)
-        left_separator.grid(row=6, column=0, columnspan=2, sticky=(E, W),
+        left_separator.grid(row=7, column=0, columnspan=2, sticky=(E, W),
                             pady=20)
 
         # browser_choice = StringVar(value="Select browser")
@@ -196,9 +201,10 @@ class BasePage(Frame):
                                            "Help -> Manual", padding=(20, 10))
         button = ttk.Button(left_frame, text="Start",
                             command=lambda: pages.set(e1.get(), e2.get(),
+                                                      e3.get(),
                                                       self.vid))
-        label.grid(row=7, column=0, sticky=W)
-        button.grid(row=7, column=1, sticky=E)
+        label.grid(row=8, column=0, sticky=W)
+        button.grid(row=9, column=1, sticky=E)
 
         # separator
         central_separator = ttk.Separator(padding_container, orient=VERTICAL)
@@ -308,4 +314,3 @@ class CameraPage(Frame):
 
 app = HandyBrowser()
 app.mainloop()
-
