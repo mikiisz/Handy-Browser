@@ -6,7 +6,7 @@ Version 1.0.1
 * [Getting started](#getting-started)
 * [Manual](#manual)
 * [Contact](#contact)
-* [Comming soon featuers](#comming-soon-features)
+* [Comming soon features](#comming-soon-features)
 
 ## General info
 Handy Browser is a small tool that help users to operate Internet Browsers with thairs hands.
@@ -47,7 +47,7 @@ We prefer to contact by email:
 * Michał Szkarłat - mikiisz497@gmail.com
 * Dominik Mondzik - mondzik.d@gmail.com
 
-## Comming soon featuers
+## Comming soon features
 During our work we came into some new ideas, which would improve functionality of this project or just make it more usable.<br>
 Below we present some of this ideas:<br>
 * instalator which will automatically add geckodriver for all (or chosen) web browsers,
