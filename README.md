@@ -50,9 +50,8 @@ There are 7 commands available:
 * Two fingers - <b> take a picture </b>
 * Three fingers - <b> make a screenshot </b>
 ```
-$ cd ../lorem
-$ npm install
-$ npm start
+$ cd Handy-Browser
+$ pyhton3 my_gui.py
 ```
 
 ## Contact
