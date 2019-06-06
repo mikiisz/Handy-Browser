@@ -37,6 +37,18 @@ To quit tha application click <b>q</b>
 
 ### Navigation
 
+![Demo mode](https://raw.githubusercontent.com/mikiisz/Handy-Browser/master/Screenshot%20from%202019-06-06%2009-58-34.png)
+
+There are 7 commands available:
+#### Dynamic Mode
+* Swipe hand in right direction - <b>open new card</b>
+* Swipe hand in left direction - <b>close current card</b>
+* Put forward two fingers from right edge of camera window - <b>open webside</b>
+* Put forward two fingers from left edge of camera window - <b>open webside</b>
+* Move hand up / down - <b>change volume level </b>
+#### Static Mode
+* Two fingers - <b> take a picture </b>
+* Three fingers - <b> make a screenshot </b>
 ```
 $ cd ../lorem
 $ npm install
